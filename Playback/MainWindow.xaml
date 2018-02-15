@@ -20,6 +20,8 @@
         <ComboBox x:Name="cbDispositivos" HorizontalAlignment="Left" Margin="51,109,0,0" VerticalAlignment="Top" Width="325"/>
         <Slider x:Name="sldVolumen" HorizontalAlignment="Left" Margin="411,55,0,0" VerticalAlignment="Top" Width="21" Orientation="Vertical" Height="114" Maximum="1.5" Value="1" 
                 Thumb.DragCompleted="sldVolumen_DragCompleted" ValueChanged="sldVolumen_ValueChanged"/>
+        <Button x:Name="btnCortar" Content="Cortar" HorizontalAlignment="Left" Margin="51,164,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="btnCortar_Click"/>
+        <Button x:Name="btnCrearFrecuencia" Content="Crear Frecuencia" HorizontalAlignment="Left" Margin="131,164,0,0" VerticalAlignment="Top" Width="115" Height="23" Click="btnCrearFrecuencia_Click"/>
 
     </Grid>
 </Window>

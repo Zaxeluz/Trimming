@@ -16,6 +16,7 @@ using Microsoft.Win32;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System.Windows.Threading;
+using System.IO;
 
 namespace Playback
 {
@@ -201,6 +202,69 @@ namespace Playback
                 volumeProvider.Volume =
                     (float)sldVolumen.Value;
             }
+        }
+
+        private void btnCortar_Click(object sender, RoutedEventArgs e)
+        {
+            //Verificar ue haya una ruta
+            if (txtRuta.Text != null && 
+                txtRuta.Text != string.Empty)
+            {
+                var reader = 
+                    new Mp3FileReader(txtRuta.Text);
+                var writer =
+                    File.Create("cortado.mp3");
+                var posicionInicial =
+                    TimeSpan.FromSeconds(10);
+                var posicionFinal =
+                    TimeSpan.FromSeconds(10);
+
+                reader.CurrentTime = posicionInicial;
+                while (reader.CurrentTime < posicionFinal)
+                {
+                    var frame =
+                        reader.ReadNextFrame();
+                    if (frame == null)
+                    {
+                        break;
+                    }
+                    writer.Write(frame.RawData,
+                        0,frame.RawData.Length);
+                }
+                writer.Dispose();
+            }
+        }
+        
+        //Va a generar una sñal con una frecuencia de 440
+        //y la uardará en un wav
+        private void btnCrearFrecuencia_Click(object sender, RoutedEventArgs e)
+        {
+            var sampleRate = 44100;
+            var channelCount = 1;
+            var signalGenerator = new SignalGenerator(sampleRate, channelCount);
+            signalGenerator.Type =
+                SignalGeneratorType.Sin;
+            signalGenerator.Frequency = 440;
+            signalGenerator.Gain = 0.5;
+
+            var WaveFormat = new WaveFormat(sampleRate, 16, channelCount);
+
+            var writer =
+                new WaveFileWriter("tono.wac", WaveFormat);
+
+            var muestrasPorSegundo =
+                sampleRate * channelCount;
+
+            var buffer =
+                new float[muestrasPorSegundo];
+
+            for (int i = 0; i < 5; i++)
+            {
+                var muestras =
+                    signalGenerator.Read(buffer, 0, muestrasPorSegundo);
+                writer.WriteSamples(buffer, 0, muestras);
+            }
+            writer.Dispose();
         }
     }
 }
